@@ -4,8 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Air conditioning and refrigeration, Tamworth | Callcott</title>
-<meta name="description" content="Air conditioning, refrigeration and cool room hire in Tamworth, the North West and New England. Call 0402 334 403.">
+<title>Callcott Refrigeration — Home</title>
+<meta name="description" content="Website preview.">
+<meta property="og:title" content="Callcott Refrigeration — Home">
+<meta property="og:description" content="Website preview.">
+<meta name="twitter:description" content="Website preview.">
 <link rel="stylesheet" href="styles.css">
 <script>
 (function(){
@@ -161,29 +164,31 @@
       <label>Phone <input type="tel" name="phone" autocomplete="tel"></label>
       <label class="full">Email <input type="email" name="email" autocomplete="email"></label>
       <label class="full">Suburb or town <input type="text" name="suburb"></label>
-      <label class="full">Type of work
-        <select name="type">
-          <option value="">Please choose</option>
-          <option>Ducted systems</option>
-          <option>Split systems</option>
-          <option>Evaporative cooling</option>
-          <option>Cool rooms and freezer rooms</option>
-          <option>Cabinets and plant upgrades</option>
-          <option>Maintenance and monitoring</option>
-          <option>Cool room hire</option>
-          <option>Beverage system / beer reticulation</option>
-          <option>Breakdown</option>
-          <option>Other</option>
-        </select>
-      </label>
+      <fieldset class="full pill-fieldset">
+        <legend>Type of work</legend>
+        <div class="pill-radios" role="radiogroup" aria-label="Type of work">
+          <label class="pill"><input type="radio" name="type" value="" checked> Please choose</label>
+          <label class="pill"><input type="radio" name="type" value="Ducted systems"> Ducted systems</label>
+          <label class="pill"><input type="radio" name="type" value="Split systems"> Split systems</label>
+          <label class="pill"><input type="radio" name="type" value="Evaporative cooling"> Evaporative cooling</label>
+          <label class="pill"><input type="radio" name="type" value="Cool rooms and freezer rooms"> Cool rooms and freezer rooms</label>
+          <label class="pill"><input type="radio" name="type" value="Cabinets and plant upgrades"> Cabinets and plant upgrades</label>
+          <label class="pill"><input type="radio" name="type" value="Maintenance and monitoring"> Maintenance and monitoring</label>
+          <label class="pill"><input type="radio" name="type" value="Cool room hire"> Cool room hire</label>
+          <label class="pill"><input type="radio" name="type" value="Beverage system / beer reticulation"> Beverage system / beer reticulation</label>
+          <label class="pill"><input type="radio" name="type" value="Breakdown"> Breakdown</label>
+          <label class="pill"><input type="radio" name="type" value="Other"> Other</label>
+        </div>
+      </fieldset>
       <label class="full">A short description <textarea name="details"></textarea></label>
-      <label>Preferred time to talk
-        <select name="when">
-          <option>Morning</option>
-          <option>Midday</option>
-          <option>Afternoon</option>
-        </select>
-      </label>
+      <fieldset class="pill-fieldset">
+        <legend>Preferred time to talk</legend>
+        <div class="pill-radios" role="radiogroup" aria-label="Preferred time to talk">
+          <label class="pill"><input type="radio" name="when" value="Morning" checked> Morning</label>
+          <label class="pill"><input type="radio" name="when" value="Midday"> Midday</label>
+          <label class="pill"><input type="radio" name="when" value="Afternoon"> Afternoon</label>
+        </div>
+      </fieldset>
       <div class="submit">
         <button class="btn btn-accent" type="submit">Request a quote</button>
         <p class="thanks" id="quote-success">Thanks. Your quote request is saved.</p>
