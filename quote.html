@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Callcott Refrigeration — Quote</title>
+<meta name="description" content="Website preview.">
+<meta property="og:title" content="Callcott Refrigeration — Quote">
+<meta property="og:description" content="Website preview.">
+<meta name="twitter:description" content="Website preview.">
+<link rel="stylesheet" href="styles.css">
+<script>
+(function(){
+  try {
+    var t = localStorage.getItem("callcott-theme");
+    if (t !== "light" && t !== "dark") {
+      t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    document.documentElement.setAttribute("data-theme", t);
+  } catch (e) {
+    document.documentElement.setAttribute("data-theme", "light");
+  }
+})();
+</script>
+</head>
+<body>
+<div id="top"></div>
+<header class="site">
+  <div class="wrap">
+    <a class="logo" href="index.html">
+      <img src="assets/logo-400.webp" alt="Callcott Refrigeration and Air Conditioning" width="400" height="146">
+    </a>
+    <nav class="desk" aria-label="Site">
+      <a href="work.html">Work</a>
+      <a href="about.html">About</a>
+      <a href="quote.html">Quote</a>
+      <a href="quote.html#book">Book a visit</a>
+      <a href="contact.html">Contact</a>
+      <a href="work.html#hire">Cool room hire</a>
+    </nav>
+    <div class="actions">
+      <a class="btn btn-ghost-light" href="tel:+61402334403">Call 0402 334 403</a>
+      <a class="btn btn-accent" href="#quote">Request a quote</a>
+            <button class="theme-toggle" type="button" aria-label="Switch light/dark">
+        <span class="theme-toggle-face" aria-hidden="true">
+          <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 14.3A8.5 8.5 0 1 1 9.7 3 7 7 0 0 0 21 14.3z"/></svg>
+        </span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="section wash page-hero" id="quote">
+  <div class="wrap book-grid">
+    <div>
+      <p class="kicker">Quote</p>
+      <h1>Request a quote</h1>
+      <p class="help">Tell us about the job. Leave your name and phone.</p>
+      <ol class="steps">
+        <li data-n="1">Fill in the fields. We only need enough to talk through the work.</li>
+        <li data-n="2">Hit “Request a quote”.</li>
+        <li data-n="3">A short thank-you will show beside the form.</li>
+        <li data-n="4">Prefer to talk now? Call 0402 334 403.</li>
+      </ol>
+    </div>
+    <form class="quote-form" action="#" method="post">
+
+      <label>Name <input type="text" name="name" autocomplete="name"></label>
+      <label>Phone <input type="tel" name="phone" autocomplete="tel"></label>
+      <label class="full">Email <input type="email" name="email" autocomplete="email"></label>
+      <label class="full">Suburb or town <input type="text" name="suburb"></label>
+      <fieldset class="full pill-fieldset">
+        <legend>Type of work</legend>
+        <div class="pill-radios" role="radiogroup" aria-label="Type of work">
+          <label class="pill"><input type="radio" name="type" value="Air conditioning" checked> Air conditioning</label>
+          <label class="pill"><input type="radio" name="type" value="Evaporative cooling"> Evaporative cooling</label>
+          <label class="pill"><input type="radio" name="type" value="Refrigeration"> Refrigeration</label>
+          <label class="pill"><input type="radio" name="type" value="Cool room construction"> Cool room construction</label>
+          <label class="pill"><input type="radio" name="type" value="Cool room hire"> Cool room hire</label>
+          <label class="pill"><input type="radio" name="type" value="Beverage system"> Beverage system</label>
+          <label class="pill"><input type="radio" name="type" value="Breakdown"> Breakdown</label>
+          <label class="pill"><input type="radio" name="type" value="Maintenance"> Maintenance</label>
+          <label class="pill"><input type="radio" name="type" value="Other"> Other</label>
+        </div>
+      </fieldset>
+      <label class="full">A short description <textarea name="details"></textarea></label>
+      <fieldset class="pill-fieldset">
+        <legend>Preferred time to talk</legend>
+        <div class="pill-radios" role="radiogroup" aria-label="Preferred time to talk">
+          <label class="pill"><input type="radio" name="when" value="Morning" checked> Morning</label>
+          <label class="pill"><input type="radio" name="when" value="Midday"> Midday</label>
+          <label class="pill"><input type="radio" name="when" value="Afternoon"> Afternoon</label>
+        </div>
+      </fieldset>
+
+      <div class="submit">
+        <button class="btn btn-accent" type="submit">Request a quote</button>
+        <p class="thanks">Thanks. Your quote request is saved.</p>
+      </div>
+    </form>
+  </div>
+</section>
+<section class="section paper" id="book">
+  <div class="wrap book-grid">
+    <div>
+      <h2>Book a visit</h2>
+      <p class="help">Pick a day that suits you. This holds a visit or a call. The job is confirmed once we reply.</p>
+    </div>
+    <form class="book-form" action="#" method="post">
+      <div class="book-widget">
+        <p class="widget-label">Preferred day</p>
+        <div class="day-chips-wrap"><div class="day-chips"></div></div>
+        <p class="widget-label">Time window</p>
+        <div class="time-pills">
+          <button type="button" class="pill is-on">Morning</button>
+          <button type="button" class="pill">Midday</button>
+          <button type="button" class="pill">Afternoon</button>
+        </div>
+        <p class="widget-label">Job type</p>
+        <div class="job-chips">
+          <button type="button" class="job-chip is-on">Ducted systems</button>
+          <button type="button" class="job-chip">Split systems</button>
+          <button type="button" class="job-chip">Evaporative cooling</button>
+          <button type="button" class="job-chip">Cool rooms and freezer rooms</button>
+          <button type="button" class="job-chip">Cabinets and plant upgrades</button>
+          <button type="button" class="job-chip">Maintenance and monitoring</button>
+          <button type="button" class="job-chip">Cool room hire</button>
+          <button type="button" class="job-chip">Beverage system</button>
+        </div>
+        <p class="summary"></p>
+        <label>Name <input type="text" name="bname" autocomplete="name"></label>
+        <label>Phone <input type="tel" name="bphone" autocomplete="tel"></label>
+        <div class="submit">
+          <button class="btn btn-accent" type="submit">Book a visit</button>
+        </div>
+      </div>
+    </form>
+    <div class="success"></div>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap">
+    <p>© 2011–2026 Callcott Refrigeration &amp; Air Conditioning</p>
+    <p><a href="tel:+61402334403">0402 334 403</a> · Tamworth NSW</p>
+  </div>
+</footer>
+<div class="sticky-call" aria-label="Call or request a quote">
+  <div class="wrap">
+    <a class="call" href="tel:+61402334403">Call</a>
+    <a class="quote" href="#quote">Request a quote</a>
+  </div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

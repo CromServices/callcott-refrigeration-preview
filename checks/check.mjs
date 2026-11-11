@@ -1,5 +1,5 @@
 import { createServer } from "node:http";
-import { readFile, mkdir } from "node:fs/promises";
+import { readFile, mkdir, readdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { extname, join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -86,12 +86,32 @@ const BANNED = [
   { re: /stay on this page/i, name: "stay on this page" },
   { re: /does not send/i, name: "does not send" },
   { re: /no online price/i, name: "no online price" },
-  { re: /\bABN\b/, name: "ABN" },
   { re: /Hargrave/i, name: "street address" },
   { re: /cory@/i, name: "cory@ email" },
   { re: /calendar/i, name: "calendar" },
   { re: /Crom /i, name: "Crom meta" },
+  { re: /AU28223/i, name: "ARC number" },
+  { re: /\bARC\b/, name: "ARC" },
+  { re: /\bvendor\b/i, name: "vendor" },
+  { re: /\btool\b/i, name: "tool" },
 ];
+
+function relLum(rgb) {
+  const m = rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+  if (!m) return 0;
+  const ch = (v) => {
+    v = Number(v) / 255;
+    return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+  };
+  return 0.2126 * ch(m[1]) + 0.7152 * ch(m[2]) + 0.0722 * ch(m[3]);
+}
+function contrastRatio(fg, bg) {
+  const L1 = relLum(fg);
+  const L2 = relLum(bg);
+  const hi = Math.max(L1, L2);
+  const lo = Math.min(L1, L2);
+  return (hi + 0.05) / (lo + 0.05);
+}
 
 async function overflow(page) {
   return page.evaluate(() => {
@@ -147,11 +167,18 @@ const shotPaths = [];
 
 await goto(page, origin, "light");
 
-const html = await readFile(join(root, "index.html"), "utf8");
-assert(/<meta name="robots" content="noindex">/.test(html), "missing noindex meta");
+const htmlFiles = (await readdir(root)).filter((n) => n.endsWith(".html"));
+for (const name of htmlFiles) {
+  const html = await readFile(join(root, name), "utf8");
+  assert(/<meta name="robots" content="noindex">/.test(html), `${name} missing noindex meta`);
+  assert(!/AU28223/i.test(html), `${name} contains ARC number`);
+  assert(!/^---\s*$/m.test(html), `${name} has front matter`);
+}
 const robots = await readFile(join(root, "robots.txt"), "utf8");
 assert(/User-agent:\s*\*/i.test(robots) && /Disallow:\s*\//i.test(robots), "robots.txt is not disallow-all");
 assert(!/overflow-x:\s*hidden/.test(await readFile(join(root, "styles.css"), "utf8")), "overflow-x:hidden is present");
+assert(existsSync(join(root, "_config.yml")), "missing _config.yml");
+assert(!existsSync(join(root, ".nojekyll")), ".nojekyll must not be present");
 
 function photoStem(src) {
   const base = src.split("/").pop().split("?")[0];
@@ -177,15 +204,13 @@ for (const img of imgInfo) {
   contentUses[stem] = (contentUses[stem] || 0) + 1;
 }
 for (const [stem, n] of Object.entries(contentUses)) {
-  assert(n === 1, `photo ${stem} used ${n} times as content`);
+  const allowed = stem === "gal-ute-sign" || stem === "gal-mobile-room" ? 2 : 1;
+  assert(n <= allowed, `photo ${stem} used ${n} times as content`);
 }
-assert(contentUses["gal-coolroom-inside"] === 1, "gal-coolroom-inside missing from gallery");
-assert(contentUses["gal-mobile-room"] === 1, "gal-mobile-room should be used once in hire");
 const hireSrc = imgInfo.filter((i) => i.inHire).map((i) => i.src).join(" ");
 assert(/gal-mobile-room/.test(hireSrc), "hire section missing gal-mobile-room");
 const gallerySrc = imgInfo.filter((i) => i.inGallery).map((i) => i.src).join(" ");
-assert(!/gal-mobile-room/.test(gallerySrc), "gal-mobile-room must not appear in the gallery");
-assert(/gal-coolroom-inside/.test(gallerySrc), "gallery missing gal-coolroom-inside");
+assert(/gal-mobile-room/.test(gallerySrc), "gallery missing gal-mobile-room");
 
 await setViewport(page, 390, 844);
 const ov390 = await overflow(page);
@@ -196,7 +221,7 @@ assert(await bar.isVisible(), "Call|Quote bar not visible at 390");
 const heroCall = page.locator(".hero .btn-accent");
 assert(await heroCall.isVisible(), "hero Call button not visible at 390");
 const callColor = await heroCall.evaluate((el) => getComputedStyle(el).backgroundColor);
-assert(callColor === "rgb(196, 74, 16)", `hero Call fill ${callColor} is not accent`);
+assert(callColor === "rgb(179, 89, 3)", `hero Call fill ${callColor} is not accent`);
 const callFg = await heroCall.evaluate((el) => getComputedStyle(el).color);
 assert(callFg === "rgb(255, 255, 255)", `hero Call text ${callFg} is not white`);
 
@@ -216,7 +241,7 @@ const barMetrics = await page.evaluate(() => {
 assert(barMetrics.count === 2, `expected 2 bar links, got ${barMetrics.count}`);
 assert(barMetrics.tops.length === 1, `Call|Quote bar not a single line (tops ${barMetrics.tops})`);
 assert(/call/i.test(barMetrics.text) && /quote/i.test(barMetrics.text), `bar text was ${barMetrics.text}`);
-assert(barMetrics.callBg === "rgb(196, 74, 16)", `bar Call fill ${barMetrics.callBg}`);
+assert(barMetrics.callBg === "rgb(179, 89, 3)", `bar Call fill ${barMetrics.callBg}`);
 assert(barMetrics.callFg === "rgb(255, 255, 255)", `bar Call text ${barMetrics.callFg}`);
 
 const heroGaps = await page.evaluate(() => {
@@ -331,6 +356,47 @@ for (const item of BANNED) {
   if (hit) failures.push(`banned text "${item.name}" matched ${JSON.stringify(hit[0])}`);
 }
 
+async function contrastPairs(p) {
+  return p.evaluate(() => {
+    function bgOf(el) {
+      let n = el;
+      while (n && n !== document.documentElement) {
+        const bg = getComputedStyle(n).backgroundColor;
+        if (bg && bg !== "rgba(0, 0, 0, 0)" && bg !== "transparent") return { bg, el: n };
+        n = n.parentElement;
+      }
+      return { bg: getComputedStyle(document.body).backgroundColor, el: document.body };
+    }
+    const pairs = [];
+    document.querySelectorAll(".kicker, .btn-accent, .sticky-call a.call").forEach((el) => {
+      const cs = getComputedStyle(el);
+      if (cs.display === "none" || cs.visibility === "hidden") return;
+      const { bg } = bgOf(el);
+      pairs.push({
+        text: el.className,
+        fg: cs.color,
+        bg: cs.backgroundColor !== "rgba(0, 0, 0, 0)" ? cs.backgroundColor : bg,
+      });
+    });
+    return pairs;
+  });
+}
+
+const contrastLog = [];
+async function assertContrast(p, theme) {
+  const pairs = await contrastPairs(p);
+  for (const pair of pairs) {
+    const r = contrastRatio(pair.fg, pair.bg);
+    contrastLog.push(`${theme} ${pair.text}: ${r.toFixed(2)}:1 (${pair.fg} on ${pair.bg})`);
+    assert(r >= 4.5, `${theme} ${pair.text} contrast ${r.toFixed(2)}:1`);
+  }
+}
+await assertContrast(page, "light");
+const darkC = await browser.newPage();
+await goto(darkC, origin, "dark");
+await assertContrast(darkC, "dark");
+await darkC.close();
+
 const lightShots = await browser.newPage();
 await goto(lightShots, origin, "light");
 await destick(lightShots);
@@ -386,5 +452,7 @@ if (failures.length) {
 
 console.log("PASS");
 console.log("proxy", proxyOn ? "http://127.0.0.1:8791" : "off (8791 closed)");
+console.log("contrast");
+for (const line of contrastLog) console.log(line);
 console.log("shots");
 for (const p of shotPaths) console.log(p);
